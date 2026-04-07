@@ -37,3 +37,111 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/bk_player_assets/player_9mmhandgun.png
 
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_000.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_000.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_001.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_001.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_002.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_002.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_003.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_003.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_004.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_004.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_005.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_005.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_006.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_006.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_007.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_007.png
+
+#begin Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_008.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_008.png
