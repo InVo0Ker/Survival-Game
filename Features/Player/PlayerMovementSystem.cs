@@ -11,6 +11,7 @@ public sealed class PlayerMovementSystem
     public void Update(PlayerModel player, GameTime gameTime, Rectangle worldBounds)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        player.UpdateTimedEffects(dt);
 
         // Handle Movement
         KeyboardState keyboard = Keyboard.GetState();

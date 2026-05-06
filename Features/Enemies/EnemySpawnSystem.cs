@@ -45,6 +45,6 @@ public sealed class EnemySpawnSystem
         }
 
         float speed = _random.Next(80, 120);
-        return new EnemyModel(spawnPos, speed, damage: 10, attackRange: 40f, attackCooldown: 1.0f, maxHealth: 100);
+        return new EnemyModel(spawnPos, speed, damage: 1, attackRange: 40f, attackCooldown: 1.0f, maxHealth: 100);
     }
 }

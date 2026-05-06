@@ -69,10 +69,8 @@ public sealed class EnemySystem
             // Deal damage at a specific frame of the attack animation (e.g., middle frame)
             if (enemy.CurrentFrame == 4 && enemy.AttackTimer <= 0 && player.Health > 0)
             {
-                player.Health -= enemy.Damage;
+                player.ApplyDamage(enemy.Damage);
                 enemy.AttackTimer = enemy.AttackCooldown;
-                
-                if (player.Health < 0) player.Health = 0;
             }
         }
         else
