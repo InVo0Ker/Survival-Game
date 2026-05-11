@@ -6,17 +6,29 @@ namespace SurvivalGame.Features.Player;
 
 public sealed class PlayerMovementSystem
 {
-    private const float ReloadTime = 2.0f;
+    private const float WalkFrameTime = 0.1f;
+    private const int WalkFrameCount = 7;
+    private const float DeathFrameTime = 0.2f;
+    private const int DeathFrameCount = 4;
 
     public void Update(PlayerModel player, GameTime gameTime, Rectangle worldBounds)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         player.UpdateTimedEffects(dt);
 
-        // Handle Movement
-        KeyboardState keyboard = Keyboard.GetState();
-        Vector2 direction = Vector2.Zero;
+        if (player.State == PlayerState.Dead)
+        {
+            UpdateDeathAnimation(player, dt);
+            return;
+        }
 
+        // Handle Weapon Switching
+        KeyboardState keyboard = Keyboard.GetState();
+        if (keyboard.IsKeyDown(Keys.D1)) player.CurrentWeaponIndex = 0;
+        if (keyboard.IsKeyDown(Keys.D2) && player.Inventory.Count > 1) player.CurrentWeaponIndex = 1;
+
+        // Handle Movement
+        Vector2 direction = Vector2.Zero;
         if (keyboard.IsKeyDown(Keys.W)) direction.Y -= 1f;
         if (keyboard.IsKeyDown(Keys.S)) direction.Y += 1f;
         if (keyboard.IsKeyDown(Keys.A)) direction.X -= 1f;
@@ -25,6 +37,15 @@ public sealed class PlayerMovementSystem
         if (direction != Vector2.Zero)
         {
             direction.Normalize();
+            player.State = PlayerState.Walking;
+            player.MoveRotation = (float)Math.Atan2(direction.Y, direction.X) - MathHelper.PiOver2;
+            UpdateWalkAnimation(player, dt);
+        }
+        else
+        {
+            player.State = PlayerState.Idle;
+            player.CurrentFrame = 0;
+            player.AnimationTimer = 0f;
         }
 
         player.Position += direction * player.SpeedPixelsPerSecond * dt;
@@ -39,10 +60,7 @@ public sealed class PlayerMovementSystem
         Vector2 lookDirection = mousePosition - player.Position;
         if (lookDirection != Vector2.Zero)
         {
-            // Assuming player sprite faces Right by default, we use Atan2. 
-            // If it faces Up, we might need an offset like -MathHelper.PiOver2.
-            // Let's check the current zombie rotation logic: (float)Math.Atan2(direction.Y, direction.X) - MathHelper.PiOver2;
-            player.Rotation = (float)Math.Atan2(lookDirection.Y, lookDirection.X);
+            player.Rotation = (float)Math.Atan2(lookDirection.Y, lookDirection.X) - MathHelper.PiOver2;
         }
 
         // Handle Reloading
@@ -51,13 +69,36 @@ public sealed class PlayerMovementSystem
             player.ReloadTimer -= dt;
             if (player.ReloadTimer <= 0)
             {
-                player.CurrentAmmo = player.MaxAmmo;
+                player.CurrentWeapon.CurrentAmmo = player.CurrentWeapon.MaxAmmo;
                 player.IsReloading = false;
             }
         }
-        else if (keyboard.IsKeyDown(Keys.R) && player.CurrentAmmo < player.MaxAmmo)
+        else if (keyboard.IsKeyDown(Keys.R) && player.CurrentWeapon.CurrentAmmo < player.CurrentWeapon.MaxAmmo)
         {
             StartReload(player);
+        }
+    }
+
+    private void UpdateWalkAnimation(PlayerModel player, float dt)
+    {
+        player.AnimationTimer += dt;
+        if (player.AnimationTimer >= WalkFrameTime)
+        {
+            player.AnimationTimer -= WalkFrameTime;
+            player.CurrentFrame = (player.CurrentFrame + 1) % WalkFrameCount;
+        }
+    }
+
+    private void UpdateDeathAnimation(PlayerModel player, float dt)
+    {
+        if (player.CurrentFrame < DeathFrameCount - 1)
+        {
+            player.DeathAnimationTimer += dt;
+            if (player.DeathAnimationTimer >= DeathFrameTime)
+            {
+                player.DeathAnimationTimer -= DeathFrameTime;
+                player.CurrentFrame++;
+            }
         }
     }
 
@@ -66,7 +107,7 @@ public sealed class PlayerMovementSystem
         if (!player.IsReloading)
         {
             player.IsReloading = true;
-            player.ReloadTimer = ReloadTime;
+            player.ReloadTimer = player.CurrentWeapon.ReloadTime;
         }
     }
 }

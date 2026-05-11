@@ -45,10 +45,19 @@ public sealed class EnemySpawnSystem
         }
 
         // Randomly pick a zombie type:
-        // 0-3: LVL1 Melee
-        // 4: Army Zombie (Ranged)
-        // 5: Cop Zombie (Ranged)
-        int typeIndex = _random.Next(6);
+        // LVL1 Melee (90% chance)
+        // LVL2 Ranged (10% chance)
+        int roll = _random.Next(100);
+        int typeIndex;
+        
+        if (roll < 90) // LVL1
+        {
+            typeIndex = _random.Next(4);
+        }
+        else // LVL2
+        {
+            typeIndex = _random.Next(4, 6);
+        }
         
         float speed;
         int damage;
