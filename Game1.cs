@@ -28,8 +28,8 @@ public class Game1 : Game
     private SceneRenderer _sceneRenderer = null!;
     private Texture2D _backgroundTexture = null!;
     private Texture2D _playerTexture = null!;
-    private Texture2D[] _enemyWalkTextures = null!;
-    private Texture2D[] _enemyAttackTextures = null!;
+    private Texture2D[][] _allEnemyWalkTextures = null!;
+    private Texture2D[][] _allEnemyAttackTextures = null!;
     private Texture2D _crosshairTexture = null!;
     private Texture2D _boxTexture = null!;
     private Texture2D _healthIconTexture = null!;
@@ -93,18 +93,48 @@ public class Game1 : Game
         _pauseMenuButtonTexture = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, "Sprites/gameFlow/BTN MENU.png"));
         _pauseBackButtonTexture = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, "Sprites/gameFlow/BTN BACK.png"));
 
-        _enemyWalkTextures = new Texture2D[9];
-        for (int i = 0; i < 9; i++)
+        string[] enemyPaths = new string[]
         {
-            string path = System.IO.Path.Combine(contentPath, $"Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Walk/Walk_{i:000}.png");
-            _enemyWalkTextures[i] = Texture2D.FromFile(GraphicsDevice, path);
-        }
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie1_female",
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie2_female",
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie3_male",
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male",
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/2LVL/Army_zombie",
+            "Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/2LVL/Cop_Zombie"
+        };
 
-        _enemyAttackTextures = new Texture2D[9];
-        for (int i = 0; i < 9; i++)
+        _allEnemyWalkTextures = new Texture2D[enemyPaths.Length][];
+        _allEnemyAttackTextures = new Texture2D[enemyPaths.Length][];
+
+        for (int t = 0; t < enemyPaths.Length; t++)
         {
-            string path = System.IO.Path.Combine(contentPath, $"Sprites/tds-zombie-character-sprite/Zombies/PNG Animations/1LVL/Zombie4_male/Attack/Attack_{i:000}.png");
-            _enemyAttackTextures[i] = Texture2D.FromFile(GraphicsDevice, path);
+            _allEnemyWalkTextures[t] = new Texture2D[9];
+            for (int i = 0; i < 9; i++)
+            {
+                string path = System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Walk/Walk_{i:000}.png");
+                _allEnemyWalkTextures[t][i] = Texture2D.FromFile(GraphicsDevice, path);
+            }
+
+            if (t < 4) // Melee
+            {
+                _allEnemyAttackTextures[t] = new Texture2D[9];
+                for (int i = 0; i < 9; i++)
+                {
+                    string path = System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Attack/Attack_{i:000}.png");
+                    _allEnemyAttackTextures[t][i] = Texture2D.FromFile(GraphicsDevice, path);
+                }
+            }
+            else // Ranged (Load weapon-specific single-frame textures)
+            {
+                _allEnemyAttackTextures[t] = new Texture2D[5]; // Indices mapping to EnemyWeapon enum
+                _allEnemyAttackTextures[t][(int)EnemyWeapon.Pistol] = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Attack/attack_pistol.png"));
+                _allEnemyAttackTextures[t][(int)EnemyWeapon.Rifle] = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Attack/attack_rifle.png"));
+                
+                if (t == 4) // Army Sniper
+                    _allEnemyAttackTextures[t][(int)EnemyWeapon.Sniper] = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Attack/attack_sniper.png"));
+                else // Cop Shotgun
+                    _allEnemyAttackTextures[t][(int)EnemyWeapon.Shotgun] = Texture2D.FromFile(GraphicsDevice, System.IO.Path.Combine(contentPath, $"{enemyPaths[t]}/Attack/attack_shotgun.png"));
+            }
         }
 
         _sceneRenderer = new SceneRenderer();
@@ -178,7 +208,7 @@ public class Game1 : Game
         // Update enemies and remove dead ones
         for (int i = _enemies.Count - 1; i >= 0; i--)
         {
-            _enemySystem.Update(_enemies[i], _player, gameTime);
+            _enemySystem.Update(_enemies[i], _player, _bullets, gameTime);
             if (_enemies[i].IsDead)
             {
                 _enemyDropSystem.TrySpawnOnEnemyDeath(_enemyDrops, _enemies[i].Position);
@@ -186,7 +216,7 @@ public class Game1 : Game
             }
         }
 
-        _bulletSystem.Update(_bullets, _enemies, _enemySystem, gameTime, viewportBounds);
+        _bulletSystem.Update(_bullets, _enemies, _enemySystem, _player, gameTime, viewportBounds);
         _enemyDropSystem.UpdateCollection(_enemyDrops, _player, gameTime);
 
         if (_player.Health <= 0)
@@ -262,11 +292,11 @@ public class Game1 : Game
                 break;
             }
             case GameLoopState.Playing:
-                _sceneRenderer.Draw(_spriteBatch, _backgroundTexture, _playerTexture, _player, _enemies, _enemyWalkTextures, _enemyAttackTextures, _crosshairTexture, _bullets, _enemyDrops, _upgradeBox, _boxTexture, _healthIconTexture, _ammoDropTexture, _armorDropTexture, _speedDropTexture, viewportBounds);
+                _sceneRenderer.Draw(_spriteBatch, _backgroundTexture, _playerTexture, _player, _enemies, _allEnemyWalkTextures, _allEnemyAttackTextures, _crosshairTexture, _bullets, _enemyDrops, _upgradeBox, _boxTexture, _healthIconTexture, _ammoDropTexture, _armorDropTexture, _speedDropTexture, viewportBounds);
                 break;
             case GameLoopState.Paused:
             {
-                _sceneRenderer.Draw(_spriteBatch, _backgroundTexture, _playerTexture, _player, _enemies, _enemyWalkTextures, _enemyAttackTextures, _crosshairTexture, _bullets, _enemyDrops, _upgradeBox, _boxTexture, _healthIconTexture, _ammoDropTexture, _armorDropTexture, _speedDropTexture, viewportBounds);
+                _sceneRenderer.Draw(_spriteBatch, _backgroundTexture, _playerTexture, _player, _enemies, _allEnemyWalkTextures, _allEnemyAttackTextures, _crosshairTexture, _bullets, _enemyDrops, _upgradeBox, _boxTexture, _healthIconTexture, _ammoDropTexture, _armorDropTexture, _speedDropTexture, viewportBounds);
                 Rectangle pausePanelBounds = _menuLayoutSystem.GetPausePanel(_pausePanelTexture, viewportBounds);
                 Rectangle menuButtonBounds = _menuLayoutSystem.GetPauseMenuButton(_pauseMenuButtonTexture, pausePanelBounds);
                 Rectangle backButtonBounds = _menuLayoutSystem.GetPauseBackButton(_pauseBackButtonTexture, menuButtonBounds);

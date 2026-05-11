@@ -44,7 +44,87 @@ public sealed class EnemySpawnSystem
                 break;
         }
 
-        float speed = _random.Next(80, 120);
-        return new EnemyModel(spawnPos, speed, damage: 1, attackRange: 40f, attackCooldown: 1.0f, maxHealth: 100);
+        // Randomly pick a zombie type:
+        // 0-3: LVL1 Melee
+        // 4: Army Zombie (Ranged)
+        // 5: Cop Zombie (Ranged)
+        int typeIndex = _random.Next(6);
+        
+        float speed;
+        int damage;
+        float attackRange;
+        float attackCooldown;
+        int maxHealth;
+        EnemyCategory category;
+        EnemyWeapon weapon = EnemyWeapon.None;
+
+        if (typeIndex < 4) // LVL1 Melee
+        {
+            speed = _random.Next(80, 120);
+            damage = 1;
+            attackRange = 40f;
+            attackCooldown = 1.0f;
+            maxHealth = 100;
+            category = EnemyCategory.Melee;
+        }
+        else // LVL2 Ranged
+        {
+            speed = _random.Next(50, 80);
+            maxHealth = 150;
+            category = EnemyCategory.Ranged;
+
+            if (typeIndex == 4) // Army Zombie
+            {
+                int weaponRoll = _random.Next(3);
+                if (weaponRoll == 0) // Pistol
+                {
+                    weapon = EnemyWeapon.Pistol;
+                    damage = 1;
+                    attackRange = 300f;
+                    attackCooldown = 1.5f;
+                }
+                else if (weaponRoll == 1) // Rifle
+                {
+                    weapon = EnemyWeapon.Rifle;
+                    damage = 1; // Damage per bullet in burst
+                    attackRange = 400f;
+                    attackCooldown = 2.5f;
+                }
+                else // Sniper
+                {
+                    weapon = EnemyWeapon.Sniper;
+                    damage = 3;
+                    attackRange = 600f;
+                    attackCooldown = 4.0f;
+                }
+            }
+            else // Cop Zombie
+            {
+                int weaponRoll = _random.Next(3);
+                if (weaponRoll == 0) // Pistol
+                {
+                    weapon = EnemyWeapon.Pistol;
+                    damage = 1;
+                    attackRange = 300f;
+                    attackCooldown = 1.5f;
+                }
+                else if (weaponRoll == 1) // Rifle
+                {
+                    weapon = EnemyWeapon.Rifle;
+                    damage = 1;
+                    attackRange = 400f;
+                    attackCooldown = 2.5f;
+                }
+                else // Shotgun
+                {
+                    weapon = EnemyWeapon.Shotgun;
+                    damage = 1; // Damage per pellet
+                    attackRange = 250f;
+                    attackCooldown = 3.0f;
+                }
+            }
+        }
+
+        return new EnemyModel(typeIndex, spawnPos, speed, damage, attackRange, attackCooldown, maxHealth, category, weapon);
     }
 }

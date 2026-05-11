@@ -25,8 +25,8 @@ public sealed class SceneRenderer
         Texture2D playerTexture,
         PlayerModel player,
         System.Collections.Generic.List<EnemyModel> enemies,
-        Texture2D[] enemyWalkTextures,
-        Texture2D[] enemyAttackTextures,
+        Texture2D[][] allEnemyWalkTextures,
+        Texture2D[][] allEnemyAttackTextures,
         Texture2D crosshairTexture,
         System.Collections.Generic.List<BulletModel> bullets,
         System.Collections.Generic.List<EnemyDropModel> enemyDrops,
@@ -51,7 +51,8 @@ public sealed class SceneRenderer
 
         foreach (var bullet in bullets)
         {
-            spriteBatch.Draw(_pixel, new Rectangle((int)bullet.Position.X - 2, (int)bullet.Position.Y - 2, 4, 4), Color.Yellow);
+            Color bulletColor = bullet.IsFromEnemy ? Color.OrangeRed : Color.Yellow;
+            spriteBatch.Draw(_pixel, new Rectangle((int)bullet.Position.X - 2, (int)bullet.Position.Y - 2, 4, 4), bulletColor);
         }
 
         foreach (var drop in enemyDrops)
@@ -66,15 +67,29 @@ public sealed class SceneRenderer
             };
 
             Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
-            
+
             spriteBatch.Draw(texture, drop.Position, null, Color.White * drop.Opacity, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
 
         foreach (var enemy in enemies)
         {
             if (enemy.IsDead) continue;
-            Texture2D[] currentAnimation = enemy.State == EnemyState.Attacking ? enemyAttackTextures : enemyWalkTextures;
-            Texture2D currentEnemyTexture = currentAnimation[enemy.CurrentFrame];
+
+            Texture2D[] walkAnims = allEnemyWalkTextures[enemy.TypeIndex];
+            Texture2D[] attackAnims = allEnemyAttackTextures[enemy.TypeIndex];
+
+            Texture2D currentEnemyTexture;
+            if (enemy.State == EnemyState.Shooting && attackAnims != null)
+            {
+                // For Ranged zombies, attackAnims contains weapon-specific textures
+                currentEnemyTexture = attackAnims[(int)enemy.Weapon];
+            }
+            else
+            {
+                Texture2D[] currentAnimation = (enemy.State == EnemyState.Attacking && attackAnims != null) ? attackAnims : walkAnims;
+                currentEnemyTexture = currentAnimation[enemy.CurrentFrame];
+            }
+
             Vector2 enemyOrigin = new(currentEnemyTexture.Width * 0.5f, currentEnemyTexture.Height * 0.5f);
             spriteBatch.Draw(currentEnemyTexture, enemy.Position, null, Color.White, enemy.Rotation, enemyOrigin, 0.1f, SpriteEffects.None, 0f);
         }
